@@ -1,0 +1,186 @@
+@import url("https://use.typekit.net/dmc6gfi.css");
+
+/* Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: none;
+}
+body {
+  min-height: 100svh;
+  overflow: hidden;
+  background: #fbe8e1;
+  font: 14px Arial, sans-serif;
+}
+button { font: inherit; }
+
+/* Landscape: coordinates and stacking belong in src/scene-config.js. */
+.scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+}
+.scene {
+  overflow: hidden; /* Transforms must never enlarge the scrollable world. */
+  isolation: isolate;
+}
+.scene-element {
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+.scene-layer,
+.scene-element[style*="translate3d"] { will-change: transform; }
+.scene-image { height: auto; }
+.heading {
+  font: italic 700 2em "brevier", Arial, sans-serif;
+  color: #3d59adc2;
+  mix-blend-mode: multiply;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Illustrated signpost hitboxes and portal button */
+.signpost-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .2rem .45rem;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 0;
+  color: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.signpost-link:hover,
+.signpost-link:focus-visible {
+  border-color: #000;
+  background: rgb(255 255 255 / 62%);
+  outline: none;
+}
+.portal-projects {
+  border: 1px solid transparent;
+  border-radius: 2em;
+  background: #a5c5ed;
+  color: #172b43;
+  font: 400 max(12px, calc(1.65 * var(--scene-unit))) Arial, sans-serif;
+  text-transform: uppercase;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: background 180ms ease, box-shadow 180ms ease;
+}
+.portal-projects:hover,
+.portal-projects:focus-visible {
+  background: #d7e9ff;
+  box-shadow: 0 0 0 2px #30476c;
+  outline: none;
+}
+
+/* Compass */
+.compass-bar {
+  touch-action: none;
+  background: rgb(255 255 255 / 12%);
+  cursor: grab;
+}
+.compass-bar:active { cursor: grabbing; }
+.compass-bar:focus-visible { outline: 2px solid #30476c; outline-offset: -2px; }
+.compass-pointer {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 13px solid #000;
+}
+.compass-track {
+  display: flex;
+  align-items: flex-start;
+  will-change: transform;
+  user-select: none;
+}
+.compass-mark {
+  padding-top: 25px;
+  text-align: center;
+  font-size: 1.2em;
+}
+.compass-tick { border-left: 1px solid #000; }
+.compass-mark.major .compass-tick { border-left-width: 2px; }
+.compass-degree {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+.compass-degree.visible { opacity: 1; }
+
+/* Dialogs: responsive UI flow, not scene coordinates */
+.projects-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgb(19 23 55 / 30%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+.projects-container[inert] { visibility: hidden; }
+.projects-container.is-open { opacity: 1; pointer-events: auto; }
+.projects-panel {
+  width: min(900px, 100%);
+  max-height: min(760px, calc(100svh - 4rem));
+  padding: 1.25rem;
+  overflow: hidden;
+  border: 1px solid #000;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 24%);
+  transform: translateY(100%);
+  transition: transform 550ms cubic-bezier(.22, 1, .36, 1);
+}
+.projects-container.is-open .projects-panel { transform: translateY(0); }
+.projects-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.projects-header h2 { font-size: 1.8rem; font-weight: 300; }
+.projects-close {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #000;
+  background: transparent;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.projects-close:hover,
+.projects-close:focus-visible { background: #000; color: #fff; outline: none; }
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-height: calc(min(760px, 100svh - 4rem) - 6rem);
+  overflow-y: auto;
+  padding: .15rem .25rem .25rem .15rem;
+}
+.project-card { min-width: 0; background: rgb(255 255 255 / 70%); }
+.project-card img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  background: #f4f4f4;
+}
+.project-card figcaption { min-height: 2.75rem; padding: .65rem .75rem; font-size: .95rem; line-height: 1.2; }
+.demo-reel-panel { width: min(960px, 100%); }
+.demo-reel-frame { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; }
+
+@media (max-width: 600px) {
+  .projects-container { padding: 1rem; }
+  .projects-panel { max-height: calc(100svh - 2rem); padding: .85rem; }
+  .project-grid { gap: .6rem; max-height: calc(100svh - 7rem); }
+  .project-card img { height: 120px; }
+  .project-card figcaption { padding: .45rem; font-size: .8rem; }
+}
