@@ -76,11 +76,11 @@ export const sceneElements = [
   }),
 
   // An opening in the clouds leaves the planets and perched heron readable.
-  layer("clouds", 0.58, 1, [-5, 305, 460, 615, 770].map((left, index) =>
-    image(`cloud-tile-${index}`, "clouds.png", { left, top: -8, width: 155 }, {
-      style: { opacity: 0.95 },
-    }),
-  )),
+  // layer("clouds", 0.58, 1, [-5, 305, 460, 615, 770].map((left, index) =>
+  //   image(`cloud-tile-${index}`, "clouds.png", { left, top: -8, width: 155 }, {
+  //     style: { opacity: 0.95 },
+  //   }),
+  // )),
 
   {
     id: "planets", className: "scene-element",
