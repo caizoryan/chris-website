@@ -15,6 +15,15 @@ export function centeredScrollPosition({ scrollLeft, centerOffset, depth, maxScr
 export function createNavigation({ page, updateParallax, registry: sceneRegistry }, isDialogOpen) {
   const { directions, step, animationDuration, mouseDrift } = COMPASS;
   const registry = new Map();
+  // Evenly spaced minor ticks from this direction to the next one.
+  const minorTicks = (index) => index === directions.length * 2 - 1 ? [] :
+    Array.from({ length: COMPASS.minorTicks }, (_, i) => ({
+      id: `compass-tick-${index}-${i + 1}`, className: "compass-tick minor",
+      layout: {
+        position: "absolute", top: 0, height: "24px",
+        left: `${50 + ((i + 1) / (COMPASS.minorTicks + 1)) * 100}%`,
+      },
+    }));
   const marks = directions.concat(directions).map((direction, index) => ({
     id: `compass-mark-${index}`,
     className: `compass-mark${index % directions.length === 0 ? " major" : ""}`,
@@ -24,7 +33,7 @@ export function createNavigation({ page, updateParallax, registry: sceneRegistry
     children: [{
       id: `compass-tick-${index}`, className: "compass-tick",
       layout: { position: "absolute", top: 0, left: "50%", height: `${index % directions.length === 0 ? 22 : 15}px` },
-    }],
+    }, ...minorTicks(index)],
   }));
   const compass = createElement({
     ...COMPASS.bar,

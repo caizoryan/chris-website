@@ -114,8 +114,8 @@ button { font: inherit; }
   text-align: center;
   font-size: 1.2em;
 }
-.compass-tick { border-left: 1px solid #fff; }
-.compass-mark.major .compass-tick { border-left-width: 2px; }
+.compass-tick { border-left: 1px solid #ffffff47; }
+.compass-mark.major .compass-tick { border-left-width: 1px; }
 .compass-degree {
   opacity: 0;
   pointer-events: none;

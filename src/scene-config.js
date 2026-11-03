@@ -183,6 +183,12 @@ export const sceneElements = [
     ],
   },
 
+  // The moon fills only the middle of its transparent canvas (about x 33–72%,
+  // y 18–50%). Centre it over the falls (~x 746) once the scroll reaches the end.
+  image("waterfall-moon", "waterfall-moon.png", { left: 736, top: 3, width: 45, zIndex: 1 }, {
+    parallax: { depth: 0.6, anchor: "end" },
+  }),
+
   image("waterfall", "waterfall.png", { left: 570, bottom: 0, width: 220, zIndex: 4 }, {
     alt: "A waterfall flowing into a pool in a rocky canyon", parallax: { depth: 0 },
   }),
@@ -217,6 +223,7 @@ export const heading = {
 export const COMPASS = {
   directions: ["N", "NW", "W", "SW", "S", "SE", "E", "NE"],
   step: 360,
+  minorTicks: 10,
   animationDuration: 650,
   mouseDrift: 30,
   bar: {
