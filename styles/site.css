@@ -35,12 +35,15 @@ button { font: inherit; }
 .scene-element[style*="translate3d"] { will-change: transform; }
 .scene-image { height: auto; }
 .heading {
-  font: italic 700 2em "brevier", Arial, sans-serif;
-  color: #3d59adc2;
-  mix-blend-mode: multiply;
+  margin: 0;
   text-align: center;
-  text-transform: uppercase;
   pointer-events: none;
+}
+.heading-logo {
+  display: inline-block;
+  width: min(420px, 60vw);
+  height: auto;
+  user-select: none;
 }
 
 /* Illustrated signpost hitboxes and portal button */
@@ -62,19 +65,24 @@ button { font: inherit; }
   background: rgb(255 255 255 / 62%);
   outline: none;
 }
-.portal-projects {
+.portal-projects,
+.projector-demo-reel {
   border: 1px solid transparent;
   border-radius: 2em;
   background: #a5c5ed;
   color: #172b43;
   font: 400 max(12px, calc(1.65 * var(--scene-unit))) Arial, sans-serif;
   text-transform: uppercase;
+  white-space: nowrap;
   pointer-events: auto;
   cursor: pointer;
   transition: background 180ms ease, box-shadow 180ms ease;
 }
+.projector-demo-reel { font-size: max(10px, calc(1.1 * var(--scene-unit))); }
 .portal-projects:hover,
-.portal-projects:focus-visible {
+.portal-projects:focus-visible,
+.projector-demo-reel:hover,
+.projector-demo-reel:focus-visible {
   background: #d7e9ff;
   box-shadow: 0 0 0 2px #30476c;
   outline: none;
@@ -83,7 +91,9 @@ button { font: inherit; }
 /* Compass */
 .compass-bar {
   touch-action: none;
-  background: rgb(255 255 255 / 12%);
+  border: 2px solid #fff;
+  background: #3358b5;
+  color: #fff;
   cursor: grab;
 }
 .compass-bar:active { cursor: grabbing; }
@@ -91,7 +101,7 @@ button { font: inherit; }
 .compass-pointer {
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
-  border-top: 13px solid #000;
+  border-top: 13px solid #fff;
 }
 .compass-track {
   display: flex;
@@ -104,7 +114,7 @@ button { font: inherit; }
   text-align: center;
   font-size: 1.2em;
 }
-.compass-tick { border-left: 1px solid #000; }
+.compass-tick { border-left: 1px solid #fff; }
 .compass-mark.major .compass-tick { border-left-width: 2px; }
 .compass-degree {
   opacity: 0;

@@ -65,7 +65,9 @@ test("portal controls and bird remain children of their moving artwork", () => {
   assert.equal(find("signpost-contact").action, "navigate");
   assert.equal(find("signpost-contact").destination, "end");
   assert.equal(find("signpost-projects").attributes["aria-expanded"], undefined);
-  assert.equal(find("signpost-demo-reel").action, "open:demo-reel-modal");
+  assert.equal(find("signpost-basecamp").destination, "start");
+  assert.equal(find("projector-demo-reel").action, "open:demo-reel-modal");
+  assert(find("projector").children.some(node => node.id === "projector-demo-reel"));
   for (const id of ["portal-projects", "bird", "signpost-projects"]) {
     assert.equal(find(id).parallax, undefined, "Children inherit their parent's movement");
   }

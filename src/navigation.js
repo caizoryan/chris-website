@@ -128,8 +128,8 @@ export function createNavigation({ page, updateParallax, registry: sceneRegistry
 
   function scrollTo(destination) {
     if (isDialogOpen() || !maxScroll()) return;
-    if (destination === "end") {
-      animateToPosition(maxPosition);
+    if (destination === "start" || destination === "end") {
+      animateToPosition(destination === "end" ? maxPosition : 0);
       return;
     }
     const target = sceneRegistry.get(destination);

@@ -50,11 +50,11 @@ retain their CSS units, so child hitboxes can use percentages and the compass ca
 use pixels. Unitless values such as `zIndex` remain unitless.
 
 ```js
-image("robot", "robot.png", {
-  left: 36, bottom: 12, width: 33, zIndex: 4,
+image("pots", "pots.png", {
+  left: 78.7, top: 66.5, width: 31.5, zIndex: 4,
 }, {
-  alt: "Robot",
-  parallax: { depth: 0.12 },
+  alt: "Two small jars beside a pot on a tripod stand",
+  parallax: { depth: 0.1 },
 })
 ```
 
@@ -84,5 +84,9 @@ unmodified source is retained in `archive/artwork/background-original.svg`.
   preserved under `archive/`; see its README.
 - The heading uses the existing Adobe Fonts stylesheet, with a system-font fallback.
   The reel loads YouTube only when opened and unloads when closed.
-- On the signpost, Projects animates to the portal's Projects button and Contact
-  animates to the end of the landscape. Demo Reel opens its dialog directly.
+- The basecamp opening view follows `archive/reference/basecamp-mockup.jpg`.
+- On the signpost, Basecamp returns to the start, Projects animates to the
+  portal's Projects button and Contact animates to the end of the landscape.
+  The Demo Reel label on the projector opens its dialog directly.
+- `rocks-filler-*.png` fill the empty ground between the checkpoints. They are
+  the ground band (60%–100%) of full-height panels, so they start at `top: 60`.

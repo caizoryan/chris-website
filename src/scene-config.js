@@ -49,6 +49,7 @@ const mountainWidth = 294;
 // source y=1335, not at the bottom of its 2250px canvas. Anchor that edge to
 // the sky/land boundary so the mountains don't float below the horizon.
 const mountainTop = SCENE.horizon - mountainWidth * 1335 / 6713;
+const fillerWidth = 6993 / 4688 * SCENE.height;
 
 export const sceneElements = [
   // The active SVG is one seam-free half of the original two-copy artwork.
@@ -96,12 +97,16 @@ export const sceneElements = [
     ],
   },
 
-  image("rocks-distance", "rocks-distance.png", { left: 0, bottom: 15, width: 65, zIndex: 2 }, {
-    parallax: { depth: 0.2 },
-  }),
-  image("rocks-foreground", "rocks-foreground.png", { left: 0, bottom: 0, width: 96, zIndex: 2 }, {
-    parallax: { depth: 0 },
-  }),
+  // Filler ground between the checkpoints. Each strip is the ground band of a
+  // full-height panel (source canvas 6993×4688), so its horizon meets SCENE.horizon.
+  ...[[1, 170], [2, 425]].map(([index, left]) =>
+    image(`rocks-filler-${index}`, `rocks-filler-${index}.png`, {
+      left, top: 60, width: fillerWidth, zIndex: 2,
+    }, {
+      parallax: { depth: 0.1 },
+      style: { maskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)" },
+    }),
+  ),
   image("portal-ground", "portal-ground.png", { left: 270, top: 5, width: 178, zIndex: 2 }, {
     parallax: { depth: 0.1 },
   }),
@@ -124,32 +129,53 @@ export const sceneElements = [
   image("bird-shadow", "bird-shadow.png", { left: 405, top: 66, width: 13, zIndex: 3 }, {
     parallax: { depth: 0.1 },
   }),
-  image("robot", "robot.png", { left: 36, bottom: 12, width: 33, zIndex: 4 }, {
-    alt: "Robot", parallax: { depth: 0.12 },
+  // The basecamp panel shares the scene's 2250px-tall canvas; the props below
+  // are placed to match archive/reference/basecamp-mockup.jpg at the start.
+  image("basecamp", "basecamp.png", { left: 0, top: 0, width: 3980 / 2250 * SCENE.height, zIndex: 3 }, {
+    alt: "An open shipping container with a shade awning and a storage trunk",
+    parallax: { depth: 0.1 },
   }),
-  image("basecamp", "basecamp.png", { left: 60, bottom: 13, width: 70, zIndex: 3 }, {
-    alt: "Basecamp", parallax: { depth: 0.2 },
+  image("pots", "pots.png", { left: 78.7, top: 66.5, width: 31.5, zIndex: 4 }, {
+    alt: "Two small jars beside a pot on a tripod stand", parallax: { depth: 0.1 },
   }),
 
   {
+    id: "projector", className: "scene-element",
+    layout: { position: "absolute", left: 3.5, top: 68.6, width: 33.6, aspectRatio: "657 / 466", zIndex: 5 },
+    parallax: { depth: 0.1 },
+    children: [
+      image("projector-artwork", "projector.png", { left: 0, top: 0, width: "100%" }, {
+        alt: "A projector cabled to a small control box",
+      }),
+      sceneButton("projector-demo-reel", "Demo Reel", "demo-reel-modal", {
+        left: "25%", top: "36%", transform: "translate(-50%, -50%)",
+        padding: "calc(.35 * var(--scene-unit)) calc(1.3 * var(--scene-unit))",
+      }, { className: "projector-demo-reel" }),
+    ],
+  },
+
+  {
     id: "signpost", className: "scene-element",
-    layout: { position: "absolute", left: 105, bottom: 3, width: 34, aspectRatio: "2091 / 2996", zIndex: 5 },
+    layout: { position: "absolute", left: 93.2, top: 28.4, width: 64, aspectRatio: "1620 / 2160", zIndex: 5 },
     parallax: { depth: 0.05 },
     children: [
       image("signpost-artwork", "signpost.png", { left: 0, top: 0, width: "100%", height: "100%" }, {
         alt: "Signpost", style: { objectFit: "contain" },
       }),
+      sceneButton("signpost-basecamp", "Basecamp", null, {
+        left: "33%", top: "45.5%", width: "16%", height: "4.5%", zIndex: 1,
+      }, {
+        action: "navigate", destination: "start",
+        attributes: { "data-signpost-item": "basecamp" },
+      }),
       sceneButton("signpost-projects", "Projects", null, {
-        left: "51%", top: "15%", width: "42%", height: "10%", zIndex: 1,
+        left: "50%", top: "43.5%", width: "15%", height: "4.5%", zIndex: 1,
       }, {
         action: "navigate", destination: "portal-projects",
         attributes: { "data-signpost-item": "projects" },
       }),
-      sceneButton("signpost-demo-reel", "Demo Reel", "demo-reel-modal", {
-        left: "12%", top: "34%", width: "38%", height: "8%", zIndex: 1,
-      }, { attributes: { "data-signpost-item": "demoReel" } }),
       sceneButton("signpost-contact", "Contact", null, {
-        left: "51%", top: "30%", width: "42%", height: "9%", zIndex: 1,
+        left: "50.5%", top: "50.5%", width: "15%", height: "4.5%", zIndex: 1,
       }, {
         action: "navigate", destination: "end",
         attributes: { "data-signpost-item": "contact" },
@@ -180,8 +206,12 @@ export const landscape = {
 };
 
 export const heading = {
-  id: "heading", tag: "h1", className: "heading", text: "Steinkampf Audio",
+  id: "heading", tag: "h1", className: "heading",
   layout: { position: "fixed", top: "1vh", left: 0, width: "100%", zIndex: 10 },
+  children: [{
+    id: "heading-logo", tag: "img", className: "heading-logo",
+    src: artwork("logo.png"), alt: "Steinkampf Audio",
+  }],
 };
 
 export const COMPASS = {
@@ -192,7 +222,7 @@ export const COMPASS = {
   bar: {
     id: "compass", tag: "nav", className: "compass-bar",
     attributes: { "aria-label": "Landscape compass", tabindex: "0" },
-    layout: { position: "fixed", bottom: 0, left: 0, width: "100%", height: `${SCENE.compassHeight}px`, zIndex: 999 },
+    layout: { position: "fixed", bottom: "2.5%", left: "2.5%", width: "95%", height: `${SCENE.compassHeight}px`, zIndex: 999 },
   },
   pointer: {
     id: "compass-pointer", className: "compass-pointer",
