@@ -52,6 +52,10 @@ export const dialogDefinitions = [
     panelClass: "demo-reel-panel",
     embed: { id: "demo-reel-frame", src: "https://www.youtube.com/embed/s0UI4r9OnFA" },
   }),
+  dialogDefinition("contact-modal", "Contact", [{
+    id: "contact-body", tag: "p", className: "contact-body",
+    text: "Have a cool project, or just want to chat about some sound? I'd love to hear from you.",
+  }], { panelClass: "contact-panel" }),
 ];
 
 export function createDialogs() {

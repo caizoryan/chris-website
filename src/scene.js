@@ -4,7 +4,7 @@ import { SCENE, landscape, heading } from "./scene-config.js";
 export function createScene(actions) {
   document.documentElement.style.setProperty(
     "--scene-unit",
-    `calc((100svh - ${SCENE.compassHeight}px) / ${SCENE.height})`,
+    `calc(100svh / ${SCENE.height})`,
   );
   const registry = new Map();
   const viewport = createElement(landscape, { registry, actions });

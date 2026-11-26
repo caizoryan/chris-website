@@ -20,7 +20,7 @@ export function createNavigation({ page, updateParallax, registry: sceneRegistry
     Array.from({ length: COMPASS.minorTicks }, (_, i) => ({
       id: `compass-tick-${index}-${i + 1}`, className: "compass-tick minor",
       layout: {
-        position: "absolute", top: 0, height: "24px",
+        position: "absolute", top: 0, height: "12px",
         left: `${50 + ((i + 1) / (COMPASS.minorTicks + 1)) * 100}%`,
       },
     }));
@@ -32,7 +32,7 @@ export function createNavigation({ page, updateParallax, registry: sceneRegistry
     style: { flex: `0 0 ${step}px` },
     children: [{
       id: `compass-tick-${index}`, className: "compass-tick",
-      layout: { position: "absolute", top: 0, left: "50%", height: `${index % directions.length === 0 ? 22 : 15}px` },
+      layout: { position: "absolute", top: 0, left: "50%", height: `${index % directions.length === 0 ? 11 : 8}px` },
     }, ...minorTicks(index)],
   }));
   const compass = createElement({

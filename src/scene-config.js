@@ -43,12 +43,31 @@ const sceneButton = (id, text, dialog, layout, options = {}) => ({
   layout: { position: "absolute", ...layout },
 });
 
+const buttonArt = (file) => new URL(`../assets/buttons/${file}`, import.meta.url).href;
+
+// A hand-lettered button: the PNG lettering on a solid panel
+// (styled by .glow-button in site.css).
+const glowButton = (id, file, label, dialog, layout) => ({
+  id,
+  tag: "button",
+  action: `open:${dialog}`,
+  attributes: { type: "button", "aria-controls": dialog, "aria-expanded": "false", "aria-label": label },
+  className: "glow-button",
+  layout: { position: "absolute", ...layout },
+  children: [{
+    id: `${id}-lettering`, tag: "img", className: "glow-button-lettering",
+    src: buttonArt(file), alt: "",
+  }],
+});
+
 const backgroundTileWidth = 3090 / 1741 * SCENE.height;
 const mountainWidth = 294;
 // The PNG includes large transparent margins. Its lowest ridge edge is near
 // source y=1335, not at the bottom of its 2250px canvas. Anchor that edge to
 // the sky/land boundary so the mountains don't float below the horizon.
 const mountainTop = SCENE.horizon - mountainWidth * 1335 / 6713;
+const ABOUT_TEXT = `That's potentially the most intense way of describing myself, and what I do with my time. Obviously, that starts with audio. Beside's working as a sound designer, I love working on music in my free time where I produce and perform electronic music, and I love working on game jams where I can meet new and unique people in the game's\u00A0world.`; // Non-breaking space keeps the last line from being a lone word.
+
 const fillerWidth = 6993 / 4688 * SCENE.height;
 
 export const sceneElements = [
@@ -119,21 +138,50 @@ export const sceneElements = [
       image("portal-artwork", "rock-portal.png", { left: 0, top: 0, width: "100%" }, {
         alt: "A heron perched on a sandstone arch, casting long shadows",
       }),
-      sceneButton("portal-projects", "Projects", "projects-modal", {
-        left: "55%", top: "53%", transform: "translateX(-50%)",
-        padding: "calc(.65 * var(--scene-unit)) calc(2.4 * var(--scene-unit))",
-      }, { className: "portal-projects" }),
+      glowButton("portal-projects", "projects.png", "Projects", "projects-modal", {
+        left: "55%", top: "53%", width: 23, transform: "translateX(-50%)",
+      }),
     ],
   },
 
   image("bird-shadow", "bird-shadow.png", { left: 405, top: 66, width: 13, zIndex: 3 }, {
     parallax: { depth: 0.1 },
   }),
+  // About copy written into the sky between basecamp and the projects portal.
+  // Multiply lets the sky gradient tint the logo-blue text.
+  {
+    id: "about", tag: "section", className: "scene-element scene-about",
+    attributes: { "aria-label": "About" },
+    layout: { position: "absolute", left: 196, top: 17, width: 62, zIndex: 1 },
+    parallax: { depth: 0.1 },
+    children: [{
+      id: "about-title", tag: "h2", className: "scene-about-title",
+      attributes: { "aria-label": "About" },
+      layout: { height: 4.2, marginBottom: 1.6 },
+      children: [
+        { id: "about-title-about", tag: "span", className: "scene-about-word about" },
+      ],
+    }, {
+      id: "about-text", tag: "p", className: "scene-about-text",
+      text: ABOUT_TEXT,
+      layout: { fontSize: 1.9 },
+    }],
+  },
+
+  image("robot", "robot.png", { left: 24, top: 50, width: 26, zIndex: 4 }, {
+    alt: "A small robot standing beside the container", parallax: { depth: 0.1 },
+  }),
   // The basecamp panel shares the scene's 2250px-tall canvas; the props below
   // are placed to match archive/reference/basecamp-mockup.jpg at the start.
   image("basecamp", "basecamp.png", { left: 0, top: 0, width: 3980 / 2250 * SCENE.height, zIndex: 3 }, {
     alt: "An open shipping container with a shade awning and a storage trunk",
     parallax: { depth: 0.1 },
+    // The panel's scattered rocks begin above the ground line (~64% down) and
+    // would sit on the far mountain band. Hide everything above the ground
+    // except the container and awning column (x 28–61% of the canvas).
+    style: {
+      maskImage: "linear-gradient(to right, transparent 28%, #000 28%, #000 61%, transparent 61%), linear-gradient(to bottom, transparent 63.6%, #000 64.6%)",
+    },
   }),
   image("pots", "pots.png", { left: 78.7, top: 66.5, width: 31.5, zIndex: 4 }, {
     alt: "Two small jars beside a pot on a tripod stand", parallax: { depth: 0.1 },
@@ -147,10 +195,9 @@ export const sceneElements = [
       image("projector-artwork", "projector.png", { left: 0, top: 0, width: "100%" }, {
         alt: "A projector cabled to a small control box",
       }),
-      sceneButton("projector-demo-reel", "Demo Reel", "demo-reel-modal", {
-        left: "25%", top: "36%", transform: "translate(-50%, -50%)",
-        padding: "calc(.35 * var(--scene-unit)) calc(1.3 * var(--scene-unit))",
-      }, { className: "projector-demo-reel" }),
+      glowButton("projector-demo-reel", "demo-reel.png", "Demo Reel", "demo-reel-modal", {
+        left: "25%", top: "36%", width: 16, transform: "translate(-50%, -50%)",
+      }),
     ],
   },
 
@@ -192,6 +239,12 @@ export const sceneElements = [
   image("waterfall", "waterfall.png", { left: 570, bottom: 0, width: 220, zIndex: 4 }, {
     alt: "A waterfall flowing into a pool in a rocky canyon", parallax: { depth: 0 },
   }),
+  {
+    ...glowButton("waterfall-contact", "contact.png", "Contact", "contact-modal", {
+      left: 739, top: 48, width: 21, zIndex: 6,
+    }),
+    parallax: { depth: 0 }, // Locked to the waterfall artwork.
+  },
   image("astronaut", "astronaut.png", { left: 570, bottom: 0, width: 220, zIndex: 5 }, {
     alt: "Chris in a spacesuit overlooking the canyon",
     // These files share a canvas. Align at the endpoint, with slightly faster
@@ -203,7 +256,7 @@ export const sceneElements = [
 export const landscape = {
   id: "landscape", tag: "main", className: "scroll-container",
   attributes: { "aria-label": "Explore the Steinkampf Audio landscape" },
-  layout: { position: "relative", width: "100%", height: `calc(100svh - ${SCENE.compassHeight}px)` },
+  layout: { position: "relative", width: "100%", height: "100svh" },
   children: [{
     id: "scene", className: "scene",
     layout: { position: "relative", width: SCENE.width, minWidth: "100%", height: "100%" },

@@ -10,9 +10,12 @@ export function layoutValue(property, value) {
 
 export function createElement(config, { registry = new Map(), actions = {} } = {}) {
   if (registry.has(config.id)) throw new Error(`Duplicate element id: ${config.id}`);
-  const element = document.createElement(config.tag ?? "div");
+  // `svg: true` builds the node (and its subtree) in the SVG namespace.
+  const element = config.svg
+    ? document.createElementNS("http://www.w3.org/2000/svg", config.tag)
+    : document.createElement(config.tag ?? "div");
   if (config.id) element.id = config.id;
-  if (config.className) element.className = config.className;
+  if (config.className) element.setAttribute("class", config.className);
   if (config.text !== undefined) element.textContent = config.text;
   if (config.src) element.setAttribute("src", config.src);
   if (config.tag === "img") {
@@ -25,7 +28,11 @@ export function createElement(config, { registry = new Map(), actions = {} } = {
   for (const [property, value] of Object.entries(config.layout ?? {})) {
     element.style[property] = layoutValue(property, value);
   }
-  Object.assign(element.style, config.style);
+  for (const [property, value] of Object.entries(config.style ?? {})) {
+    // Custom properties ("--name") are only reachable through setProperty.
+    if (property.startsWith("--")) element.style.setProperty(property, String(value));
+    else element.style[property] = value;
+  }
   if (config.action) {
     if (!actions[config.action]) throw new Error(`Unknown action: ${config.action}`);
     element.addEventListener("click", () => actions[config.action](instance));
